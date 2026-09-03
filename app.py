@@ -78,10 +78,25 @@ if layout:
         ]),
     }
     sections = layout.get('sections', [])
+    colors = set()
     for sec in sections:
         for cont in sec.get('visualContainers', []):
             config = json.loads(cont.get('config', ""))
+            objects = config.get('singleVisual', {}).get('objects', {})
+            def recurse(keys, obj):
+                for key in keys:
+                    if isinstance(obj[key], str):
+                        if key in color_keys['objects']:
+                            colors.add(obj[key])
+                    elif isinstance(obj[key], dict):
+                        recurse(obj[key].keys(), obj[key])
+                    elif isinstance(obj[key], list):
+                        for item in obj[key]:
+                            recurse(item.keys(), item)
+                    
+            recurse(objects.keys(), objects)
 
+    print("Colours found :", colors)
 
         
 else:
