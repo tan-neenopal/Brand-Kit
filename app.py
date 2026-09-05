@@ -1,6 +1,7 @@
-import os
-import zipfile
 import json
+import os
+import re
+import zipfile
 
 # Your powerbi input file
 file_path = os.path.join(os.getcwd(), 'powerbifile.pbit')
@@ -79,25 +80,37 @@ if layout:
     }
     sections = layout.get('sections', [])
     colors = set()
+    fonts = set()
     for sec in sections:
         for cont in sec.get('visualContainers', []):
             config = json.loads(cont.get('config', ""))
-            objects = config.get('singleVisual', {}).get('objects', {})
-            def recurse(keys, obj):
+            curr_key = None
+            def recurse(keys, obj, top_layer: bool, main_obj_key: str, pattern: str):
+                global curr_key
                 for key in keys:
+                    if top_layer:
+                        curr_key = key
                     if isinstance(obj[key], str):
-                        if key in color_keys['objects']:
+                        if curr_key in color_keys[main_obj_key] and bool(re.match(pattern, obj[key].strip())):
                             colors.add(obj[key])
                     elif isinstance(obj[key], dict):
-                        recurse(obj[key].keys(), obj[key])
+                        recurse(obj[key].keys(), obj[key], False, main_obj_key, pattern)
                     elif isinstance(obj[key], list):
                         for item in obj[key]:
-                            recurse(item.keys(), item)
+                            recurse(item.keys(), item, False, main_obj_key, pattern)
+                    if top_layer:
+                        curr_key = None
                     
-            recurse(objects.keys(), objects)
+            objects = config.get('singleVisual', {}).get('objects', {})
+            color_pattern = r"^[ '\"]*#[0-9a-fA-F]{6}[ '\"]*$"
+            recurse(objects.keys(), objects, True, 'objects', color_pattern)
+            
+            objects = config.get('singleVisual', {}).get('vcObjects', {})
+            recurse(objects.keys(), objects, True, 'vcObjects', color_pattern)
+            # font_pattern = r".*"
 
     print("Colours found :", colors)
-
+        # print("Fonts found :", fonts)
         
 else:
     print("No Layout found")
