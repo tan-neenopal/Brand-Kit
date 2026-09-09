@@ -2,6 +2,7 @@ import json
 import os
 import re
 import zipfile
+import pprint
 
 ELEMENT_MAP = {
     
@@ -33,6 +34,7 @@ ELEMENT_MAP = {
     "tableEx":                           "chart",
     "pivotTable":                        "chart",
     "gauge":                             "chart",
+    # 'shape':                             "textbox",
 
     'textbox':                           "textbox",
 
@@ -50,6 +52,7 @@ ELEMENT_MAP = {
 
 # Your powerbi input file
 file_path = os.path.join(os.getcwd(), 'powerbifile.pbix')
+pp = pprint.PrettyPrinter(indent=4, sort_dicts=False)
 
 # Open the .pbit file directly as a ZIP archive
 try:
@@ -136,25 +139,42 @@ if layout:
                 'filter': [],
                 'chart': [],
                 'textbox': [],
+                'group': {}
             }
+            
+            # Preprocess the containers and seperate call the groups
+            # groups = {}
+            # for cont in sec.get('visualContainers', []):
+            #     cont['config'] = 
+            #     if 'singleVisualGroup' in cont['config']:
+            #         groups[cont['config']['name']] = cont['config']
+
             for cont in sec.get('visualContainers', []):
                 config = json.loads(cont.get('config', ""))
-                visual_type = config.get('singleVisual', {}).get('visualType', '')
-                visual_type = ELEMENT_MAP.get(visual_type, None)
-                if visual_type:
-                    element_layout[visual_type].append((
+                if "singleVisualGroup" in config:
+                    element_layout['group'][config['name']] = (
                         config['layouts'][0]['position']['x'],
                         config['layouts'][0]['position']['y'],
                         config['layouts'][0]['position']['width'],
                         config['layouts'][0]['position']['height'],
-                    ))
+                        config.get('parentGroupName', '')
+                    )
+                else:
+                    visual_type = config.get('singleVisual', {}).get('visualType', '')
+                    visual_type = ELEMENT_MAP.get(visual_type, None)
+                    if visual_type:
+                        element_layout[visual_type].append((
+                            config['layouts'][0]['position']['x'],
+                            config['layouts'][0]['position']['y'],
+                            config['layouts'][0]['position']['width'],
+                            config['layouts'][0]['position']['height'],
+                            config.get('parentGroupName', '')
+                        ))
             screens[sec['displayName']] = element_layout
-
         return screens, width, height
 
 
     def extract_features(serach_keys, pattern):
-        
         sections = layout.get('sections', [])
         colors = set()
         fonts = set()
@@ -204,14 +224,50 @@ if layout:
         page_names = list(screens.keys())
 
         def build_canvas(element_layout):
-            blocks = []
+            groups = element_layout.get('group', {})
+
+            # Map group -> child groups and group -> child elements
+            child_groups   = {gid: [] for gid in groups}
+            child_elements = {gid: [] for gid in groups}
+            root_group_ids = []
+
+            for gid, (*_, parent_gid) in groups.items():
+                if parent_gid and parent_gid in groups:
+                    child_groups[parent_gid].append(gid)
+                else:
+                    root_group_ids.append(gid)
+
+            # Bucket elements into their immediate group or root canvas
+            root_elements = []
             for el_type, rects in element_layout.items():
+                if el_type == 'group':
+                    continue
                 label, bg, border = STYLES.get(el_type, (el_type, '#aaaaaa', '#555555'))
-                for x, y, w, h in rects:
-                    blocks.append(
-                        f'<div class="element {el_type}" style="left:{x}px;top:{y}px;width:{w}px;height:{h}px;background:{bg}33;border:2px solid {border};">'
+                for x, y, w, h, group_id in rects:
+                    el_div = (
+                        f'<div class="element {el_type}" '
+                        f'style="left:{x}px;top:{y}px;width:{w}px;height:{h}px;'
+                        f'background:{bg}33;border:2px solid {border};">'
                         f'<span>{label}</span></div>'
                     )
+                    if group_id and group_id in child_elements:
+                        child_elements[group_id].append(el_div)
+                    else:
+                        root_elements.append(el_div)
+
+            def render_group(gid, depth=0):
+                gx, gy, gw, gh, _ = groups[gid]
+                inner = "\n".join(
+                    [render_group(cid, depth + 1) for cid in child_groups[gid]]
+                    + child_elements[gid]
+                )
+                return (
+                    f'<div class="group-container" data-depth="{depth}" '
+                    f'style="left:{gx}px;top:{gy}px;width:{gw}px;height:{gh}px;">'
+                    f'\n{inner}\n</div>'
+                )
+
+            blocks = [render_group(gid) for gid in root_group_ids] + root_elements
             return "\n".join(blocks)
 
         tab_buttons = "\n".join(
@@ -285,6 +341,25 @@ if layout:
             }}
             .page-canvas.hidden {{ display: none; }}
 
+            /* Groups */
+            .group-container {{
+                position: absolute;
+                border: 1px dashed #888;
+                border-radius: 6px;
+            }}
+            body.hide-groups .group-container {{
+                border-color: transparent;
+            }}
+
+            /* Groups-only mode */
+            body.groups-only .element {{ display: none; }}
+            body.groups-only .group-container .group-container {{ visibility: hidden; }}
+            body.groups-only .group-container[data-depth="0"] {{
+                border: 2px solid #aaa;
+                border-radius: 6px;
+                background: #ffffff18;
+            }}
+
             /* Elements */
             .element {{
                 position: absolute;
@@ -306,18 +381,37 @@ if layout:
             <body>
             <h2>Power BI Layout Preview &nbsp;<small>{canvas_width} × {canvas_height} px</small></h2>
             <div class="legend">{legend_items}</div>
-            <div class="tabs">
-            {tab_buttons}
+            <div style="display:flex;align-items:center;justify-content:space-between;width:{canvas_width}px;margin-bottom:8px;">
+              <div class="tabs" style="margin-left:0;">
+              {tab_buttons}
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button id="toggle-groups" onclick="toggleGroups()" style="padding:6px 14px;border:1px solid #666;border-radius:6px;background:#2e2e2e;color:#ccc;cursor:pointer;font-size:12px;">Hide Groups</button>
+                <button id="toggle-groups-only" onclick="toggleGroupsOnly()" style="padding:6px 14px;border:1px solid #666;border-radius:6px;background:#2e2e2e;color:#ccc;cursor:pointer;font-size:12px;">Groups Only</button>
+              </div>
             </div>
             {canvases}
             <script>
             function showPage(idx) {{
                 document.querySelectorAll('.page-canvas').forEach((el, i) => {{
-                el.classList.toggle('hidden', i !== idx);
+                    el.classList.toggle('hidden', i !== idx);
                 }});
                 document.querySelectorAll('.tab-btn').forEach((btn, i) => {{
-                btn.classList.toggle('active', i === idx);
+                    btn.classList.toggle('active', i === idx);
                 }});
+            }}
+            function toggleGroups() {{
+                const hidden = document.body.classList.toggle('hide-groups');
+                document.getElementById('toggle-groups').textContent = hidden ? 'Show Groups' : 'Hide Groups';
+            }}
+            function toggleGroupsOnly() {{
+                const on = document.body.classList.toggle('groups-only');
+                document.getElementById('toggle-groups-only').textContent = on ? 'Show All' : 'Groups Only';
+                document.getElementById('toggle-groups-only').style.color = on ? '#fff' : '#ccc';
+                document.getElementById('toggle-groups-only').style.borderColor = on ? '#aaa' : '#666';
+                // Disable the hide-groups toggle while groups-only is active
+                document.getElementById('toggle-groups').disabled = on;
+                document.getElementById('toggle-groups').style.opacity = on ? '0.4' : '1';
             }}
             </script>
             </body>
@@ -328,6 +422,7 @@ if layout:
         print(f"Layout HTML saved to: {output_path}")
 
     layout_data, canvas_width, canvas_height = extract_layout()
+    # print(layout_data)
     generate_layout_html(layout_data, canvas_width, canvas_height)
         
 else:

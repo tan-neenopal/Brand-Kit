@@ -28,7 +28,7 @@
                 gap: 4px;
                 margin-bottom: 0;
                 align-self: flex-start;
-                margin-left: calc(50% - 640px);
+                margin-left: calc(50% - 640.0px);
             }
             .tab-btn {
                 padding: 8px 18px;
@@ -53,6 +53,25 @@
             }
             .page-canvas.hidden { display: none; }
 
+            /* Groups */
+            .group-container {
+                position: absolute;
+                border: 1px dashed #888;
+                border-radius: 6px;
+            }
+            body.hide-groups .group-container {
+                border-color: transparent;
+            }
+
+            /* Groups-only mode */
+            body.groups-only .element { display: none; }
+            body.groups-only .group-container .group-container { visibility: hidden; }
+            body.groups-only .group-container[data-depth="0"] {
+                border: 2px solid #aaa;
+                border-radius: 6px;
+                background: #ffffff18;
+            }
+
             /* Elements */
             .element {
                 position: absolute;
@@ -72,297 +91,71 @@
             </style>
             </head>
             <body>
-            <h2>Power BI Layout Preview &nbsp;<small>1280 × 720 px</small></h2>
+            <h2>Power BI Layout Preview &nbsp;<small>1280.0 × 720.0 px</small></h2>
             <div class="legend"><div class="legend-item"><span class="swatch" style="background:#4e8ef7;border-color:#1a3a6b;"></span>Chart</div><div class="legend-item"><span class="swatch" style="background:#f7a14e;border-color:#6b3a1a;"></span>KPI</div><div class="legend-item"><span class="swatch" style="background:#4ef7a1;border-color:#1a6b3a;"></span>Filter</div><div class="legend-item"><span class="swatch" style="background:#f7e94e;border-color:#6b5f1a;"></span>Textbox</div></div>
-            <div class="tabs">
-            <button class="tab-btn active" onclick="showPage(0)">Powerbi Guide</button>
-<button class="tab-btn" onclick="showPage(1)">Index Page</button>
-<button class="tab-btn" onclick="showPage(2)">Executive Summary / Corporate Overview</button>
-<button class="tab-btn" onclick="showPage(3)">Financial Performance Dashboard</button>
-<button class="tab-btn" onclick="showPage(4)">Market and Competitor Insights</button>
-<button class="tab-btn" onclick="showPage(5)">Operations & Supply Chain</button>
-<button class="tab-btn" onclick="showPage(6)">Sales & Marketing Performance</button>
-<button class="tab-btn" onclick="showPage(7)">Customer Insights</button>
-<button class="tab-btn" onclick="showPage(8)">Innovation & R&D</button>
-<button class="tab-btn" onclick="showPage(9)">ESG & Sustainability Metrics</button>
-<button class="tab-btn" onclick="showPage(10)">Risk & Compliance</button>
-<button class="tab-btn" onclick="showPage(11)">Board-Level Alerts & Notifications</button>
-<button class="tab-btn" onclick="showPage(12)">Stock & Investor Relations Dashboard</button>
-<button class="tab-btn" onclick="showPage(13)">People & Talent Management</button>
-<button class="tab-btn" onclick="showPage(14)">Digital Transformation & Tech Initiatives</button>
-<button class="tab-btn" onclick="showPage(15)">Capital Investments & Projects</button>
-<button class="tab-btn" onclick="showPage(16)">Legal & Regulatory Updates</button>
-<button class="tab-btn" onclick="showPage(17)">Corporate Reputation & Media Sentiment</button>
-<button class="tab-btn" onclick="showPage(18)">Investor Commitments & Funding Plans</button>
-<button class="tab-btn" onclick="showPage(19)">Board Decisions & Action Tracker</button>
-<button class="tab-btn" onclick="showPage(20)">Strategic Roadmap & Vision Tracker</button>
-<button class="tab-btn" onclick="showPage(21)">World Map</button>
+            <div style="display:flex;align-items:center;justify-content:space-between;width:1280.0px;margin-bottom:8px;">
+              <div class="tabs" style="margin-left:0;">
+              <button class="tab-btn active" onclick="showPage(0)">Page 1</button>
+<button class="tab-btn" onclick="showPage(1)">Page 2</button>
+<button class="tab-btn" onclick="showPage(2)">Page 3</button>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button id="toggle-groups" onclick="toggleGroups()" style="padding:6px 14px;border:1px solid #666;border-radius:6px;background:#2e2e2e;color:#ccc;cursor:pointer;font-size:12px;">Hide Groups</button>
+                <button id="toggle-groups-only" onclick="toggleGroupsOnly()" style="padding:6px 14px;border:1px solid #666;border-radius:6px;background:#2e2e2e;color:#ccc;cursor:pointer;font-size:12px;">Groups Only</button>
+              </div>
             </div>
-            <div class="page-canvas" id="page-0" style="width:1280px;height:720px;">
-<div class="element chart" style="left:27.27272727272727px;top:22.727272727272727px;width:225.45454545454544px;height:63.63636363636363px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:640px;top:102.5px;width:598.75px;height:531.25px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element textbox" style="left:27.350746268656714px;top:156.02238805970148px;width:722.6865671641791px;height:145.97014925373134px;background:#f7e94e33;border:2px solid #6b5f1a;"><span>Textbox</span></div>
-<div class="element textbox" style="left:0px;top:0px;width:417.27272727272725px;height:43.63636363636363px;background:#f7e94e33;border:2px solid #6b5f1a;"><span>Textbox</span></div>
-<div class="element textbox" style="left:24.545454545454543px;top:50px;width:392.7272727272727px;height:108.18181818181817px;background:#f7e94e33;border:2px solid #6b5f1a;"><span>Textbox</span></div>
+            <div class="page-canvas" id="page-0" style="width:1280.0px;height:720.0px;">
+<div class="element kpi" style="left:21.781512605042018px;top:110.11764705882354px;width:223.8655462184874px;height:106.4873949579832px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:245.64705882352942px;top:107.69747899159664px;width:179.09243697478993px;height:101.64705882352942px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:441.6806722689076px;top:107.69747899159664px;width:185.14285714285717px;height:112.53781512605043px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:640.1344537815127px;top:111.32773109243698px;width:165.78151260504202px;height:105.27731092436976px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element chart" style="left:21.974248927038627px;top:296.6523605150214px;width:402.4034334763948px;height:337.85407725321886px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element chart" style="left:844.6351931330472px;top:112.61802575107296px;width:435.3648068669528px;height:521.8884120171674px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element chart" style="left:438.1115879828326px;top:296.6523605150214px;width:376.3090128755365px;height:337.85407725321886px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element textbox" style="left:258.19742489270385px;top:0px;width:736.137339055794px;height:93.39055793991416px;background:#f7e94e33;border:2px solid #6b5f1a;"><span>Textbox</span></div>
 </div>
-<div class="page-canvas hidden" id="page-1" style="width:1280px;height:720px;">
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:1px;width:1264px;height:618px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="page-canvas hidden" id="page-1" style="width:1280.0px;height:720.0px;">
+<div class="element kpi" style="left:31.587982832618025px;top:112.61802575107296px;width:190.90128755364807px;height:118.11158798283262px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:527.381974248927px;top:112.61802575107296px;width:196.39484978540773px;height:118.11158798283262px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:273.3047210300429px;top:112.61802575107296px;width:208.75536480686694px;height:118.11158798283262px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:778.7124463519314px;top:112.61802575107296px;width:211.50214592274676px;height:118.11158798283262px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:1042.4034334763949px;top:112.61802575107296px;width:201.88841201716738px;height:118.11158798283262px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element chart" style="left:31.587982832618025px;top:307.63948497854074px;width:372.18884120171674px;height:355.7081545064378px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element chart" style="left:447.7310924369748px;top:307.36134453781517px;width:377.546218487395px;height:355.764705882353px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element chart" style="left:866.6094420600858px;top:310.3862660944206px;width:377.6824034334764px;height:355.7081545064378px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element textbox" style="left:244.46351931330472px;top:0px;width:784.206008583691px;height:87.8969957081545px;background:#f7e94e33;border:2px solid #6b5f1a;"><span>Textbox</span></div>
 </div>
-<div class="page-canvas hidden" id="page-2" style="width:1280px;height:720px;">
-<div class="element filter" style="left:0px;top:20px;width:113px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:21.109375px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:19.390625px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:38.015625px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:232px;height:52px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:686px;height:192px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:570px;height:227px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:65px;width:686px;height:228px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:570px;height:197px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-3" style="width:1280px;height:720px;">
-<div class="element filter" style="left:0px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:38.734375px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:244px;height:63px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:30px;width:387px;height:244px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:673px;height:189px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:52px;width:584px;height:202px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:319px;height:246px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:543px;height:210px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-4" style="width:1280px;height:720px;">
-<div class="element kpi" style="left:1px;top:1px;width:317px;height:109px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:314px;height:109px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:314px;height:109px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element filter" style="left:0px;top:20px;width:138px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:154px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:400px;height:229px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:337px;height:228px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:512px;height:467px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:401px;height:228px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:746px;height:203px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-5" style="width:1280px;height:720px;">
-<div class="element filter" style="left:67.078125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:142px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:138px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:838px;height:197px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:418px;height:235px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:417px;height:205px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:257.96px;height:204px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:561px;height:205px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-6" style="width:1280px;height:720px;">
-<div class="element kpi" style="left:142.5px;top:31px;width:100px;height:70px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:314px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:316px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:316px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element filter" style="left:23.125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:21.109375px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:149px;top:0px;width:149px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:296px;height:46px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:101px;width:385px;height:163px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:874px;height:170px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:65px;width:619px;height:162px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:640px;height:162px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-7" style="width:1280px;height:720px;">
-<div class="element kpi" style="left:1px;top:1px;width:315px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:320px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:314px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element filter" style="left:0px;top:20px;width:108px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:193px;height:90px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:96px;top:0px;width:97px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:96px;top:0px;width:96px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:368px;height:453px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:318px;height:224px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:810px;height:192px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:888px;height:193px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:562px;height:222px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-8" style="width:1280px;height:720px;">
-<div class="element filter" style="left:78.515625px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:242.984375px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:120px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:235px;height:69px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:1264px;height:143px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:428px;height:258px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:428px;height:254px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:53px;width:830px;height:235px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-9" style="width:1280px;height:720px;">
-<div class="element filter" style="left:0px;top:20px;width:168px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:274px;height:60px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:621px;height:253px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:30px;width:636px;height:252px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:299.67px;height:199px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:297.73px;height:199px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:300.64px;height:200px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:311.31px;height:200px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-10" style="width:1280px;height:720px;">
-<div class="element kpi" style="left:1px;top:1px;width:314px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:314px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element kpi" style="left:1px;top:1px;width:314px;height:115px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element filter" style="left:38.015625px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:21.109375px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:151px;top:0px;width:151px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:303px;height:44px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:53px;width:521px;height:174px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:713px;height:187px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:545px;height:223px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:53px;width:711px;height:177px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:547px;height:166px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-11" style="width:1280px;height:720px;">
-<div class="element filter" style="left:0px;top:20px;width:145px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:238px;height:61px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:243.41px;height:147px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:508px;height:402px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:53px;width:387px;height:205px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:747px;height:197px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:30px;width:356px;height:129px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:274px;height:151px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-12" style="width:1280px;height:720px;">
-<div class="element filter" style="left:42.578125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:41.96875px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:200.46875px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:118px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:129px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:37.953125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:131px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:614.0661864025216px;height:170px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:644px;height:197.23953174245833px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:52px;width:643px;height:206px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:215.28px;height:147px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:215.28px;height:128px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:385px;height:199px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-13" style="width:1280px;height:720px;">
-<div class="element filter" style="left:0px;top:20px;width:158px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:21.109375px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:259px;height:66px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:53px;width:589px;height:213px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:554px;height:184px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:316px;height:219px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:380px;height:218px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:667px;height:197px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-14" style="width:1280px;height:720px;">
-<div class="element kpi" style="left:277.0px;top:53px;width:100px;height:70px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
-<div class="element filter" style="left:0px;top:20px;width:145.2253521126761px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:145.2253521126761px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:64.703125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:251.671875px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:145.2253521126761px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:145.2253521126761px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:603px;height:230px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:123px;width:654px;height:137.87077892841057px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:655px;height:193px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:219.16px;height:130px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:219.16px;height:147px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:212.37px;height:130px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:212.37px;height:147px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-15" style="width:1280px;height:720px;">
-<div class="element filter" style="left:39.46875px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:205.609375px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:129px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:156px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:156px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:148px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:53px;width:613px;height:197px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:65px;width:646px;height:198px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:52px;width:611px;height:192px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:646px;height:214px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-16" style="width:1280px;height:720px;">
-<div class="element filter" style="left:51.140625px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:75.53125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:37.953125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:0px;width:102px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:156px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:157px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:157px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:359px;height:208px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:655.8090950022515px;height:163px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:600.7001350742908px;height:198px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:600px;height:206px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:287px;height:241px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-17" style="width:1280px;height:720px;">
-<div class="element filter" style="left:64.703125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:245.5625px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:42.578125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:67.203125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:221.671875px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:156px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:156px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:1px;top:23px;width:280px;height:57px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:574.7086897793787px;height:176px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:681px;height:170px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:575px;height:208px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:52px;width:680px;height:220px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-18" style="width:1280px;height:720px;">
-<div class="element filter" style="left:21.125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:21.125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:600.7843313822602px;height:170px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:652.1251688428636px;height:193px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:600.7843313822602px;height:271px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:53px;width:650px;height:197px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-19" style="width:1280px;height:720px;">
-<div class="element filter" style="left:68.96875px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:42.578125px;top:0px;width:115px;height:35px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element chart" style="left:1px;top:31px;width:652px;height:230px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:602px;height:272px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:602.5502026114364px;height:240px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:66px;width:652px;height:170px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-20" style="width:1280px;height:720px;">
-<div class="element chart" style="left:1px;top:31px;width:314.22px;height:171px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:0px;top:0px;width:160px;height:30px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:307.43px;height:171px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:287.06px;height:171px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:289.97px;height:171px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:784px;height:197px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-<div class="element chart" style="left:1px;top:31px;width:469.95632597928864px;height:371px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
-</div>
-<div class="page-canvas hidden" id="page-21" style="width:1280px;height:720px;">
-<div class="element filter" style="left:0px;top:20px;width:203px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:205px;height:29px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:204px;height:190px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
-<div class="element filter" style="left:0px;top:20px;width:204px;height:327px;background:#4ef7a133;border:2px solid #1a6b3a;"><span>Filter</span></div>
+<div class="page-canvas hidden" id="page-2" style="width:1280.0px;height:720.0px;">
+<div class="element kpi" style="left:678.4549356223175px;top:90.64377682403433px;width:222.4892703862661px;height:119.48497854077253px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:689.4420600858369px;top:240.34334763948496px;width:211.50214592274676px;height:119.48497854077253px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:988.8412017167382px;top:101.63090128755364px;width:219.74248927038627px;height:108.49785407725321px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element kpi" style="left:1001.2017167381974px;top:241.7167381974249px;width:207.38197424892704px;height:118.11158798283262px;background:#f7a14e33;border:2px solid #6b3a1a;"><span>KPI</span></div>
+<div class="element chart" style="left:32.67226890756303px;top:371.4957983193278px;width:571.1596638655462px;height:313.4117647058824px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element chart" style="left:678.8571428571429px;top:371.4957983193278px;width:549.3781512605042px;height:313.4117647058824px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element chart" style="left:32.96137339055794px;top:96.13733905579399px;width:571.3304721030042px;height:263.6909871244635px;background:#4e8ef733;border:2px solid #1a3a6b;"><span>Chart</span></div>
+<div class="element textbox" style="left:230.72961373390558px;top:0px;width:828.1545064377682px;height:96.13733905579399px;background:#f7e94e33;border:2px solid #6b5f1a;"><span>Textbox</span></div>
 </div>
             <script>
             function showPage(idx) {
                 document.querySelectorAll('.page-canvas').forEach((el, i) => {
-                el.classList.toggle('hidden', i !== idx);
+                    el.classList.toggle('hidden', i !== idx);
                 });
                 document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-                btn.classList.toggle('active', i === idx);
+                    btn.classList.toggle('active', i === idx);
                 });
+            }
+            function toggleGroups() {
+                const hidden = document.body.classList.toggle('hide-groups');
+                document.getElementById('toggle-groups').textContent = hidden ? 'Show Groups' : 'Hide Groups';
+            }
+            function toggleGroupsOnly() {
+                const on = document.body.classList.toggle('groups-only');
+                document.getElementById('toggle-groups-only').textContent = on ? 'Show All' : 'Groups Only';
+                document.getElementById('toggle-groups-only').style.color = on ? '#fff' : '#ccc';
+                document.getElementById('toggle-groups-only').style.borderColor = on ? '#aaa' : '#666';
+                // Disable the hide-groups toggle while groups-only is active
+                document.getElementById('toggle-groups').disabled = on;
+                document.getElementById('toggle-groups').style.opacity = on ? '0.4' : '1';
             }
             </script>
             </body>
